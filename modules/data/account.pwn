@@ -4,8 +4,8 @@
 
 #define DATABASE_DATETIME_LENGTH    (19+1)
 
-#define MIN_PASSWORD_LENGHT         4
-#define MAX_PASSWORD_LENGHT         16
+#define MIN_PASSWORD_LENGTH         4
+#define MAX_PASSWORD_LENGTH         16
 
 #define START_MONEY                 500
 #define START_SKIN_MALE             60
@@ -174,17 +174,17 @@ hook OnPlayerCadasterResponse(playerid, dialogid, response, listitem, string:inp
         return Kick(playerid);
     }
 
-    if (!(MIN_PASSWORD_LENGHT <= strlen(inputtext) <= MAX_PASSWORD_LENGHT)) 
+    if (!(MIN_PASSWORD_LENGTH <= strlen(inputtext) <= MAX_PASSWORD_LENGTH)) 
     {
         return Dialog_ShowCallback(playerid, using public OnPlayerCadasterResponse<iiiis>, DIALOG_STYLE_PASSWORD, "Cadastrando", 
-            "{FFFFFF}* Coloque uma senha abaixo para cadastrar sua conta no servidor:\n\n{FF0000}* Coloque uma senha entre "#MIN_PASSWORD_LENGHT" e "#MAX_PASSWORD_LENGHT" caracteres.", 
+            "{FFFFFF}* Coloque uma senha abaixo para cadastrar sua conta no servidor:\n\n{FF0000}* Coloque uma senha entre "#MIN_PASSWORD_LENGTH" e "#MAX_PASSWORD_LENGTH" caracteres.", 
             "Cadastrar", "Sair"
         );
     }
 
     format(
         g_s_PlayerAccount[playerid][E_PLAYER_PASSWORD], 
-        MAX_PASSWORD_LENGHT + 1, 
+        MAX_PASSWORD_LENGTH + 1, 
         inputtext
     );
 
