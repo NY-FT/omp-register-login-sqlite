@@ -215,10 +215,11 @@ hook OnPlayerGenderResponse(playerid, dialogid, response, listitem, string:input
         SpawnPlayer(playerid);
         GivePlayerMoney(playerid, START_MONEY);
 
-        DB_ExecuteQuery(DB_GetHandle(), "INSERT INTO `ACCOUNTS` (`NAME`, `PASSWORD`, `SKIN_ID`) VALUES ('%q', '%q', %i);",
+        DB_ExecuteQuery(DB_GetHandle(), "INSERT INTO `ACCOUNTS` (`NAME`, `PASSWORD`, `SKIN_ID`, `CREATED_AT`) VALUES ('%q', '%q', %i, %i);",
             GetPlayerNamef(playerid),
             hash,
-            GetPlayerSkin(playerid)
+            GetPlayerSkin(playerid),
+            gettime()
         );
 
         new DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT LAST_INSERT_ROWID();");
