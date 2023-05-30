@@ -2,8 +2,6 @@
 
 // --------------------------------------------------------------------------------
 
-#define DATABASE_DATETIME_LENGTH    (19+1)
-
 #define MIN_PASSWORD_LENGTH         4
 #define MAX_PASSWORD_LENGTH         16
 
@@ -30,8 +28,8 @@ static enum E_PLAYER_ACCOUNT_DATA
     Float:E_PLAYER_THIRST,
     Float:E_PLAYER_ENERGY,
 
-    E_PLAYER_CREATED_AT[DATABASE_DATETIME_LENGTH],
-    E_PLAYER_UPDATED_AT[DATABASE_DATETIME_LENGTH]
+    E_PLAYER_CREATED_AT,
+    E_PLAYER_UPDATED_AT
 };
 
 static g_s_PlayerAccount[MAX_PLAYERS][E_PLAYER_ACCOUNT_DATA];
@@ -48,17 +46,6 @@ static stock void:__DB_SaveAccount(playerid)
 
     GetPlayerPos(playerid, x, y, z);
     GetPlayerFacingAngle(playerid, a);
-
-    new
-        year, 
-        month, 
-        day, 
-        hour, 
-        minute, 
-        second;
-
-    getdate(year, month, day);
-    gettime(hour, minute, second);
 
     DB_ExecuteQuery(DB_GetHandle(), "\
         UPDATE `ACCOUNTS` SET \
@@ -79,7 +66,7 @@ static stock void:__DB_SaveAccount(playerid)
             `Y`            = %.4f, \
             `Z`            = %.4f, \
             `A`            = %.4f, \
-            `UPDATED_AT`   = '%04i-%02i-%02i %02i:%02i:%02i' \
+            `UPDATED_AT`   = %i \
         WHERE \
             `ID`           = %i;", 
         GetPlayerMoney(playerid), 
@@ -95,14 +82,16 @@ static stock void:__DB_SaveAccount(playerid)
         g_s_PlayerAccount[playerid][E_PLAYER_HUNGER], 
         g_s_PlayerAccount[playerid][E_PLAYER_THIRST], 
         g_s_PlayerAccount[playerid][E_PLAYER_ENERGY], 
-        x, y, z, a, 
-        year, month, day, hour, minute, second, 
+        x, y, z, a, gettime(),
         g_s_PlayerAccount[playerid][E_PLAYER_DATABASE_ID]
     );
 }
 
 static stock void:__ResetPlayerData(playerid)
 {
+    new 
+        gt = gettime();
+
     ResetPlayerMoney(playerid);
     ResetPlayerWeapons(playerid);
 
@@ -120,6 +109,8 @@ static stock void:__ResetPlayerData(playerid)
     g_s_PlayerAccount[playerid][E_PLAYER_HUNGER]      = 0.0;
     g_s_PlayerAccount[playerid][E_PLAYER_THIRST]      = 0.0;
     g_s_PlayerAccount[playerid][E_PLAYER_ENERGY]      = 0.0;
+    g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]  = gt;
+    g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]  = gt;
 }
 
 // -------------------------------------------------------------------------------------
@@ -260,9 +251,6 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
             new 
                 DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT * FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid));
 
-            DB_GetFieldStringByName(result, "CREATED_AT", g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]);
-            DB_GetFieldStringByName(result, "UPDATED_AT", g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]);
-
             GivePlayerMoney(playerid,       DB_GetFieldIntByName(result, "MONEY"));
             SetPlayerScore(playerid,        DB_GetFieldIntByName(result, "SCORE"));
             SetPlayerInterior(playerid,     DB_GetFieldIntByName(result, "INTERIOR_ID"));
@@ -277,6 +265,8 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
             g_s_PlayerAccount[playerid][E_PLAYER_HUNGER]      = DB_GetFieldFloatByName(result, "HUNGER");
             g_s_PlayerAccount[playerid][E_PLAYER_THIRST]      = DB_GetFieldFloatByName(result, "THIRST");
             g_s_PlayerAccount[playerid][E_PLAYER_ENERGY]      = DB_GetFieldFloatByName(result, "ENERGY");
+            g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]  = DB_GetFieldIntByName(result, "CREATED_AT");
+            g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]  = DB_GetFieldIntByName(result, "UPDATED_AT");
 
             SetSpawnInfo(playerid, 
                 NO_TEAM, 
