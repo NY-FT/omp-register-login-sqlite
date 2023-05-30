@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 #include <open.mp>
-#include <samp_bcrypt>
+#include <bcrypt>
 
 #include <YSI_Coding\y_hooks>
 #include <YSI_Visual\y_dialog>
