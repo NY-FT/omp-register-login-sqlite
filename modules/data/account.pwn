@@ -222,8 +222,8 @@ hook OnPlayerGenderResponse(playerid, dialogid, response, listitem, string:input
             gettime()
         );
 
-        new DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT LAST_INSERT_ROWID();");
-        g_s_PlayerAccount[playerid][E_PLAYER_DATABASE_ID] = DB_GetFieldInt(result);
+        new DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT `ID` FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1;", GetPlayerNamef(playerid));
+        g_s_PlayerAccount[playerid][E_PLAYER_DATABASE_ID] = DB_GetFieldIntByName(result, "ID");
         DB_FreeResultSet(result);
     }
 
