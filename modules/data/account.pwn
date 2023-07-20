@@ -93,10 +93,6 @@ static stock void:__DB_SaveAccount(playerid)
 
 static stock void:__ResetPlayerData(playerid)
 {
-    new 
-        gt = gettime()
-    ;
-
     ResetPlayerMoney(playerid);
     ResetPlayerWeapons(playerid);
 
