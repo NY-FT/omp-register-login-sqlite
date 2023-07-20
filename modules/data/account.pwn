@@ -32,7 +32,9 @@ static enum E_PLAYER_ACCOUNT_DATA
     E_PLAYER_UPDATED_AT
 };
 
-static g_s_PlayerAccount[MAX_PLAYERS][E_PLAYER_ACCOUNT_DATA];
+static 
+    g_s_PlayerAccount[MAX_PLAYERS][E_PLAYER_ACCOUNT_DATA]
+;
 
 // --------------------------------------------------------------------------------
 
@@ -42,7 +44,8 @@ static stock void:__DB_SaveAccount(playerid)
         Float:x, 
         Float:y, 
         Float:z, 
-        Float:a;
+        Float:a
+    ;
 
     GetPlayerPos(playerid, x, y, z);
     GetPlayerFacingAngle(playerid, a);
@@ -66,7 +69,7 @@ static stock void:__DB_SaveAccount(playerid)
             `Y`            = %.4f, \
             `Z`            = %.4f, \
             `A`            = %.4f, \
-            `UPDATED_AT`   = %i \
+            `UPDATED_AT`   = STRFTIME('%%Y-%%m-%%d %%H:%%M:%%S', %i) \
         WHERE \
             `ID`           = %i;", 
         GetPlayerMoney(playerid), 
@@ -90,7 +93,8 @@ static stock void:__DB_SaveAccount(playerid)
 static stock void:__ResetPlayerData(playerid)
 {
     new 
-        gt = gettime();
+        gt = gettime()
+    ;
 
     ResetPlayerMoney(playerid);
     ResetPlayerWeapons(playerid);
@@ -121,7 +125,8 @@ hook OnPlayerRequestClass(playerid, classid)
     TogglePlayerSpectating(playerid, true);
 
     new 
-        DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT `PASSWORD` FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid));
+        DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT `PASSWORD` FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid))
+    ;
 
     if (DB_GetRowCount(result)) 
     {
@@ -141,18 +146,21 @@ hook OnPlayerRequestClass(playerid, classid)
     }
 
     DB_FreeResultSet(result);
+
     return 1;
 }
 
 hook OnPlayerConnect(playerid)
 {
     __ResetPlayerData(playerid);
+
     return 1;
 }
 
 hook OnPlayerDisconnect(playerid, reason)
 {
     __DB_SaveAccount(playerid);
+
     return 1;
 }
 
@@ -249,7 +257,8 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
         if (sucess)
         {
             new 
-                DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT * FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid));
+                DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT * FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid))
+            ;
 
             GivePlayerMoney(playerid,       DB_GetFieldIntByName(result, "MONEY"));
             SetPlayerScore(playerid,        DB_GetFieldIntByName(result, "SCORE"));
