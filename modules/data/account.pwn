@@ -204,7 +204,7 @@ hook OnPlayerGenderResponse(playerid, dialogid, response, listitem, string:input
         return Kick(playerid);
     }
 
-    inline const OnPasswordHashed(string:hash[])
+    inline const PasswordHashed(string:hash[])
     {
         format(
             g_s_PlayerAccount[playerid][E_PLAYER_PASSWORD], 
@@ -237,7 +237,7 @@ hook OnPlayerGenderResponse(playerid, dialogid, response, listitem, string:input
     BCrypt_HashInline(
         g_s_PlayerAccount[playerid][E_PLAYER_PASSWORD], 
         BCRYPT_COST, 
-        using inline OnPasswordHashed \
+        using inline PasswordHashed \
     );
 
     return 1;
@@ -252,7 +252,7 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
         return Kick(playerid);
     }
 
-    inline const OnPasswordMatched(bool:sucess)
+    inline const PasswordChecked(bool:sucess)
     {
         if (sucess)
         {
@@ -300,7 +300,7 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
     BCrypt_CheckInline(
         inputtext, 
         g_s_PlayerAccount[playerid][E_PLAYER_PASSWORD], 
-        using inline OnPasswordMatched \
+        using inline PasswordChecked \
     );
 
     return 1;
