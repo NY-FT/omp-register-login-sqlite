@@ -25,8 +25,8 @@ CREATE TABLE `ACCOUNTS` (
     `Y`                 REAL            NOT NULL DEFAULT 0.0,
     `Z`                 REAL            NOT NULL DEFAULT 0.0,
     `A`                 REAL            NOT NULL DEFAULT 0.0,
-    `CREATED_AT`        INTEGER       	NOT NULL DEFAULT 0,
-    `UPDATED_AT`        INTEGER       	NOT NULL DEFAULT 0,
+    `CREATED_AT`        INTEGER       	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `UPDATED_AT`        INTEGER       	NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`ID` AUTOINCREMENT)
 );
 
