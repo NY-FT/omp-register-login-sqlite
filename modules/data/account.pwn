@@ -4,6 +4,7 @@
 
 #define MIN_PASSWORD_LENGTH         4
 #define MAX_PASSWORD_LENGTH         16
+#define DB_TIMESTAMP_LENGTH         (10 + 1 + 9) // 0000-00-00 00:00:00
 
 #define START_MONEY                 500
 #define START_SKIN_MALE             60
@@ -28,8 +29,8 @@ static enum E_PLAYER_ACCOUNT_DATA
     Float:E_PLAYER_THIRST,
     Float:E_PLAYER_ENERGY,
 
-    E_PLAYER_CREATED_AT,
-    E_PLAYER_UPDATED_AT
+    E_PLAYER_CREATED_AT[DB_TIMESTAMP_LENGTH + 1],
+    E_PLAYER_UPDATED_AT[DB_TIMESTAMP_LENGTH + 1],
 };
 
 static 
@@ -107,14 +108,14 @@ static stock void:__ResetPlayerData(playerid)
     SetPlayerHealth(playerid,       0);
     SetPlayerArmour(playerid,       0);
 
-    g_s_PlayerAccount[playerid][E_PLAYER_DATABASE_ID] = 0;
-    g_s_PlayerAccount[playerid][E_PLAYER_JOB_ID]      = 0;
-    g_s_PlayerAccount[playerid][E_PLAYER_ADMIN_LEVEL] = 0;
-    g_s_PlayerAccount[playerid][E_PLAYER_HUNGER]      = 0.0;
-    g_s_PlayerAccount[playerid][E_PLAYER_THIRST]      = 0.0;
-    g_s_PlayerAccount[playerid][E_PLAYER_ENERGY]      = 0.0;
-    g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]  = gt;
-    g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]  = gt;
+    g_s_PlayerAccount[playerid][E_PLAYER_DATABASE_ID]   = 0;
+    g_s_PlayerAccount[playerid][E_PLAYER_JOB_ID]        = 0;
+    g_s_PlayerAccount[playerid][E_PLAYER_ADMIN_LEVEL]   = 0;
+    g_s_PlayerAccount[playerid][E_PLAYER_HUNGER]        = 0.0;
+    g_s_PlayerAccount[playerid][E_PLAYER_THIRST]        = 0.0;
+    g_s_PlayerAccount[playerid][E_PLAYER_ENERGY]        = 0.0;
+    g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT][0] = EOS;
+    g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT][0] = EOS;
 }
 
 // -------------------------------------------------------------------------------------
@@ -260,6 +261,9 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
                 DBResult:result = DB_ExecuteQuery(DB_GetHandle(), "SELECT * FROM `ACCOUNTS` WHERE `NAME` = '%q' LIMIT 1", GetPlayerNamef(playerid))
             ;
 
+            DB_GetFieldStringByName(result, "CREATED_AT", g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]);
+            DB_GetFieldStringByName(result, "UPDATED_AT", g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]);
+
             GivePlayerMoney(playerid,       DB_GetFieldIntByName(result, "MONEY"));
             SetPlayerScore(playerid,        DB_GetFieldIntByName(result, "SCORE"));
             SetPlayerInterior(playerid,     DB_GetFieldIntByName(result, "INTERIOR_ID"));
@@ -274,8 +278,6 @@ hook OnPlayerEnterResponse(playerid, dialogid, response, listitem, string:inputt
             g_s_PlayerAccount[playerid][E_PLAYER_HUNGER]      = DB_GetFieldFloatByName(result, "HUNGER");
             g_s_PlayerAccount[playerid][E_PLAYER_THIRST]      = DB_GetFieldFloatByName(result, "THIRST");
             g_s_PlayerAccount[playerid][E_PLAYER_ENERGY]      = DB_GetFieldFloatByName(result, "ENERGY");
-            g_s_PlayerAccount[playerid][E_PLAYER_CREATED_AT]  = DB_GetFieldIntByName(result, "CREATED_AT");
-            g_s_PlayerAccount[playerid][E_PLAYER_UPDATED_AT]  = DB_GetFieldIntByName(result, "UPDATED_AT");
 
             SetSpawnInfo(playerid, 
                 NO_TEAM, 
