@@ -24,14 +24,66 @@ static
 ;
 
 // External
-forward OnPlayerLogIn(playerid);
-forward OnPlayerLogOut(playerid);
+forward OnPlayerLogin(playerid);
+forward OnPlayerLogout(playerid);
 forward OnPlayerRegister(playerid);
 
 // Internal
 forward OnPlayerLoginResponse(playerid, dialogid, response, listitem, string:inputtext[]);
 forward OnPlayerRegisterResponse(playerid, dialogid, response, listitem, string:inputtext[]);
 forward OnPlayerSexResponse(playerid, dialogid, response, listitem, string:inputtext[]);
+
+/**
+ * # External
+ */
+
+stock SetAccountJob(playerid, value) {
+    gAccountData[playerid][E_ACCOUNT_JOB_ID] = value;
+}
+
+stock GetAccountJob(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_JOB_ID];
+}
+
+stock SetAccountAdminLevel(playerid, value) {
+    gAccountData[playerid][E_ACCOUNT_ADMIN_LEVEL] = value;
+}
+
+stock GetAccountAdminLevel(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_ADMIN_LEVEL];
+}
+
+stock SetAccountHunger(playerid, Float:value) {
+    gAccountData[playerid][E_ACCOUNT_HUNGER] = value;
+}
+
+stock Float:GetAccountHunger(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_HUNGER];
+}
+
+stock SetAccountThirst(playerid, Float:value) {
+    gAccountData[playerid][E_ACCOUNT_THIRST] = value;
+}
+
+stock Float:GetAccountThirst(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_THIRST];
+}
+
+stock SetAccountEnergy(playerid, Float:value) {
+    gAccountData[playerid][E_ACCOUNT_ENERGY] = value;
+}
+
+stock Float:GetAccountEnergy(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_ENERGY];
+}
+
+stock Timestamp:GetAccountCreatedAt(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_CREATED_AT];
+}
+
+stock Timestamp:GetAccountUpdatedAt(playerid) {
+    return gAccountData[playerid][E_ACCOUNT_UPDATED_AT];
+}
 
 /**
  * # Internal
@@ -97,7 +149,7 @@ static SaveAccountInternal(playerid) {
     );
 
     // Call
-    CallLocalFunction("OnPlayerLogOut", "i", playerid);
+    CallLocalFunction("OnPlayerLogout", "i", playerid);
 }
 
 static ResetPlayerDataInternal(playerid) {
@@ -224,7 +276,7 @@ hook OnPlayerLoginResponse(playerid, dialogid, response, listitem, string:inputt
             DB_FreeResultSet(result);
 
             // Call
-            CallLocalFunction("OnPlayerLogIn", "i", playerid);
+            CallLocalFunction("OnPlayerLogin", "i", playerid);
         } else {
             Dialog_ShowCallback(playerid, using public OnPlayerLoginResponse<iiiis>, DIALOG_STYLE_PASSWORD, "Entrando",
                 "{FFFFFF}Coloque sua senha abaixo para entrar com sua conta no servidor:\n\n{FF0000}Senha incorreta. Tente novamente!",
