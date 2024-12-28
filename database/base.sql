@@ -7,7 +7,7 @@ PRAGMA SYNCHRONOUS = OFF;
 CREATE TABLE `ACCOUNTS` (
     `ID`                INTEGER         NOT NULL,
     `NAME`              TEXT            NOT NULL COLLATE NOCASE,
-    `PASSWORD`          TEXT            NOT NULL,
+    `HASH`              TEXT            NOT NULL,
     `MONEY`             INTEGER         NOT NULL DEFAULT 500,
     `SCORE`             INTEGER         NOT NULL DEFAULT 0,
     `SKIN_ID`           INTEGER         NOT NULL,
@@ -21,12 +21,12 @@ CREATE TABLE `ACCOUNTS` (
     `HUNGER`            REAL            NOT NULL DEFAULT 100.0,
     `THIRST`            REAL            NOT NULL DEFAULT 100.0,
     `ENERGY`            REAL            NOT NULL DEFAULT 100.0,
-    `X`                 REAL            NOT NULL DEFAULT 0.0,
-    `Y`                 REAL            NOT NULL DEFAULT 0.0,
-    `Z`                 REAL            NOT NULL DEFAULT 0.0,
-    `A`                 REAL            NOT NULL DEFAULT 0.0,
-    `CREATED_AT`        INTEGER       	NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `UPDATED_AT`        INTEGER       	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `X`                 REAL            NOT NULL DEFAULT 0.0000,
+    `Y`                 REAL            NOT NULL DEFAULT 0.0000,
+    `Z`                 REAL            NOT NULL DEFAULT 3.1172,
+    `A`                 REAL            NOT NULL DEFAULT 0.0000,
+    `CREATED_AT`        DATETIME        NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+    `UPDATED_AT`        DATETIME        NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
     PRIMARY KEY (`ID` AUTOINCREMENT)
 );
 
